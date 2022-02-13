@@ -14,12 +14,13 @@ CHROMEDRIVER_EXEC_PATH = Service(f'{getenv("CHROME_DRIVER_PATH")}')
 Website = f'{getenv("CLASSES_WEBSITE")}'
 user_id = f'{getenv("USER_ID")}'
 password = f'{getenv("PASSWORD")}'
+test_link = 'https://cuchd.blackboard.com/ultra/courses/_54496_1/outline'
 
 driver = webdriver.Chrome(service=CHROMEDRIVER_EXEC_PATH)
 driver.get(f"{Website}")
 driver.maximize_window()
 try:
-    element = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.CLASS_NAME, "button-1")))
+    element = WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.CLASS_NAME, "button-1")))
     # webdriver waits for 5 seconds until the condition (presence of ele located is fullfilled)
     # then it moves on and find element by class name ,id , or css selectors etc
     agree_button = driver.find_element(by=By.CLASS_NAME, value="button-1")
@@ -29,6 +30,14 @@ try:
     password_input = driver.find_element(by=By.ID,value="password")
     password_input.send_keys(password)
     password_input.send_keys(Keys.ENTER)
+    driver.get(test_link)
+    drop_down_ele = WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.ID, "sessions-list-dropdown")))
+    # time.sleep(5)
+    join_session_drop_down = driver.find_element(by=By.ID,value="sessions-list-dropdown")
+    join_session_drop_down.click()
+    join_button = driver.find_element(by=By.XPATH,value='//*[@id="sessions-list"]/li/a')
+    join_button.click()
+    time.sleep(20)
 except TimeoutException as E:
     print('Failed')
 time.sleep(100)
