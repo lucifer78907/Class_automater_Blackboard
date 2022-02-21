@@ -3,7 +3,7 @@ from selenium.webdriver.chrome.service import Service  # for making a service ob
 from selenium.webdriver.support.ui import WebDriverWait  # for using explict wait
 from selenium.webdriver.support import expected_conditions as ec  # to specify the condition to wait by
 from selenium.webdriver.common.by import By  # to find elements By (id,class etc)
-from selenium.common.exceptions import TimeoutException,NoSuchElementException
+from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
@@ -12,6 +12,10 @@ import time
 from datetime import datetime as dt
 from dotenv import load_dotenv
 from os import getenv
+
+# TODO-1: complete time table
+# TODO-2: fix bugs
+# TODO-3: automate to run the script at specific time
 
 load_dotenv()
 Website = f'{getenv("CLASSES_WEBSITE")}'
@@ -37,7 +41,7 @@ driver.get(f"{Website}")
 driver.maximize_window()
 
 try:
-    # webdriver waits for 5 seconds until the condition (presence of ele located is fullfilled)
+    # webdriver waits for 5 seconds until the condition (presence of ele located is fulfilled)
     # then it moves on and find element by class name ,id , or css selectors etc
     element = WebDriverWait(driver, 5).until(ec.element_to_be_clickable((By.CLASS_NAME, "button-1")))
     agree_button = driver.find_element(by=By.CLASS_NAME, value="button-1")
@@ -48,7 +52,7 @@ except TimeoutException as E:
     password_input = driver.find_element(by=By.ID, value="password")
     password_input.send_keys(password)
     password_input.send_keys(Keys.ENTER)
-    # getting the class link from time table
+    # getting the class link from timetable
     for ele in today_time_table:
         curr_class, st_time_hour, st_time_min = today_time_table[ele]
         if st_time_hour == curr_hour and st_time_min - 5 < curr_min < st_time_min + 7:
@@ -59,7 +63,6 @@ except TimeoutException as E:
             print("No classes found")
 
     drop_down_ele = WebDriverWait(driver, 9).until(ec.element_to_be_clickable((By.ID, "sessions-list-dropdown")))
-    # time.sleep(5)
     join_session_drop_down = driver.find_element(by=By.ID, value="sessions-list-dropdown")
     join_session_drop_down.click()
     try:
@@ -68,7 +71,6 @@ except TimeoutException as E:
     except NoSuchElementException:
         join_button = driver.find_element(by=By.XPATH, value='//*[@id="sessions-list"]/li/a[1]')
         join_button.click()
-
 
 time.sleep(2400)
 driver.close()
