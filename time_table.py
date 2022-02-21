@@ -23,7 +23,7 @@ class_start_times = {
 }
 
 time_table = {
-    "monday": {
+    "Monday": {
         "class1": (MI,*class_start_times["start1"]),
         "class2": (AI, *class_start_times["start2"]),
         "class3": (MATHS, *class_start_times["start3"]),
@@ -32,6 +32,3 @@ time_table = {
         "class6": (SOFT_ENG_LAB, *class_start_times["start7"])
     }
 }
-
-for ele in time_table:
-        print(time_table[ele])

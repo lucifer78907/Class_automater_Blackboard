@@ -7,7 +7,9 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
+from time_table import time_table
 import time
+from datetime import datetime as dt
 from dotenv import load_dotenv
 from os import getenv
 
@@ -15,7 +17,14 @@ load_dotenv()
 Website = f'{getenv("CLASSES_WEBSITE")}'
 user_id = f'{getenv("USER_ID")}'
 password = f'{getenv("PASSWORD")}'
-test_link = 'https://cuchd.blackboard.com/ultra/courses/_53014_1/outline'
+
+# getting the current time and weekday
+today = dt.today().strftime("%A %I %M").split()
+weekday,curr_hour,curr_min = today
+today_time_table = time_table[weekday]
+print(weekday,curr_hour,curr_min)
+print(time_table[weekday])
+
 op = Options()
 op.add_argument("user-data-dir=/home/rudra/.config/google-chrome")
 op.add_experimental_option("prefs", {
@@ -36,7 +45,15 @@ try:
     password_input = driver.find_element(by=By.ID, value="password")
     password_input.send_keys(password)
     password_input.send_keys(Keys.ENTER)
-    driver.get(test_link)
+    # getting the class link from time table
+    for ele in today_time_table:
+        curr_class,st_time_hour,st_time_min = today_time_table[ele]
+        if st_time_hour==curr_hour and st_time_min-5 < curr_min <st_time_min+5:
+            driver.get(curr_class)
+            break
+        else:
+            print("No classes found")
+
     drop_down_ele = WebDriverWait(driver, 9).until(ec.element_to_be_clickable((By.ID, "sessions-list-dropdown")))
     # time.sleep(5)
     join_session_drop_down = driver.find_element(by=By.ID, value="sessions-list-dropdown")
