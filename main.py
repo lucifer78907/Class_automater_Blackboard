@@ -15,7 +15,7 @@ load_dotenv()
 Website = f'{getenv("CLASSES_WEBSITE")}'
 user_id = f'{getenv("USER_ID")}'
 password = f'{getenv("PASSWORD")}'
-test_link = 'https://cuchd.blackboard.com/ultra/courses/_49461_1/outline'
+test_link = 'https://cuchd.blackboard.com/ultra/courses/_53014_1/outline'
 op = Options()
 op.add_argument("user-data-dir=/home/rudra/.config/google-chrome")
 op.add_experimental_option("prefs", {
