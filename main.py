@@ -3,7 +3,7 @@ from selenium.webdriver.chrome.service import Service  # for making a service ob
 from selenium.webdriver.support.ui import WebDriverWait  # for using explict wait
 from selenium.webdriver.support import expected_conditions as ec  # to specify the condition to wait by
 from selenium.webdriver.common.by import By  # to find elements By (id,class etc)
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import TimeoutException,NoSuchElementException
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
@@ -21,6 +21,8 @@ password = f'{getenv("PASSWORD")}'
 # getting the current time and weekday
 today = dt.today().strftime("%A %I %M").split()
 weekday, curr_hour, curr_min = today
+curr_hour = int(curr_hour)
+curr_min = int(curr_min)
 today_time_table = time_table[weekday]
 
 op = Options()
@@ -29,9 +31,11 @@ op.add_experimental_option("prefs", {
     "profile.default_content_setting_values.media_stream_mic": 1,
     "profile.default_content_setting_values.media_stream_camera": 1,
 })
+
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=op)
 driver.get(f"{Website}")
 driver.maximize_window()
+
 try:
     # webdriver waits for 5 seconds until the condition (presence of ele located is fullfilled)
     # then it moves on and find element by class name ,id , or css selectors etc
@@ -47,8 +51,9 @@ except TimeoutException as E:
     # getting the class link from time table
     for ele in today_time_table:
         curr_class, st_time_hour, st_time_min = today_time_table[ele]
-        if st_time_hour == curr_hour and st_time_min - 5 < curr_min < st_time_min + 5:
+        if st_time_hour == curr_hour and st_time_min - 5 < curr_min < st_time_min + 7:
             driver.get(curr_class)
+            print("Class found")
             break
         else:
             print("No classes found")
@@ -57,7 +62,13 @@ except TimeoutException as E:
     # time.sleep(5)
     join_session_drop_down = driver.find_element(by=By.ID, value="sessions-list-dropdown")
     join_session_drop_down.click()
-    join_button = driver.find_element(by=By.XPATH, value='//*[@id="sessions-list"]/li/a')
-    join_button.click()
-time.sleep(100)
+    try:
+        join_button = driver.find_element(by=By.XPATH, value='//*[@id="sessions-list"]/li/a')
+        join_button.click()
+    except NoSuchElementException:
+        join_button = driver.find_element(by=By.XPATH, value='//*[@id="sessions-list"]/li/a[1]')
+        join_button.click()
+
+
+time.sleep(2400)
 driver.close()
