@@ -20,10 +20,8 @@ password = f'{getenv("PASSWORD")}'
 
 # getting the current time and weekday
 today = dt.today().strftime("%A %I %M").split()
-weekday,curr_hour,curr_min = today
+weekday, curr_hour, curr_min = today
 today_time_table = time_table[weekday]
-print(weekday,curr_hour,curr_min)
-print(time_table[weekday])
 
 op = Options()
 op.add_argument("user-data-dir=/home/rudra/.config/google-chrome")
@@ -35,11 +33,12 @@ driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), opti
 driver.get(f"{Website}")
 driver.maximize_window()
 try:
-    element = WebDriverWait(driver, 5).until(ec.element_to_be_clickable((By.CLASS_NAME, "button-1")))
     # webdriver waits for 5 seconds until the condition (presence of ele located is fullfilled)
     # then it moves on and find element by class name ,id , or css selectors etc
+    element = WebDriverWait(driver, 5).until(ec.element_to_be_clickable((By.CLASS_NAME, "button-1")))
     agree_button = driver.find_element(by=By.CLASS_NAME, value="button-1")
     agree_button.click()
+except TimeoutException as E:
     user_id_input = driver.find_element(by=By.ID, value="user_id")
     user_id_input.send_keys(user_id)
     password_input = driver.find_element(by=By.ID, value="password")
@@ -47,8 +46,8 @@ try:
     password_input.send_keys(Keys.ENTER)
     # getting the class link from time table
     for ele in today_time_table:
-        curr_class,st_time_hour,st_time_min = today_time_table[ele]
-        if st_time_hour==curr_hour and st_time_min-5 < curr_min <st_time_min+5:
+        curr_class, st_time_hour, st_time_min = today_time_table[ele]
+        if st_time_hour == curr_hour and st_time_min - 5 < curr_min < st_time_min + 5:
             driver.get(curr_class)
             break
         else:
@@ -60,7 +59,5 @@ try:
     join_session_drop_down.click()
     join_button = driver.find_element(by=By.XPATH, value='//*[@id="sessions-list"]/li/a')
     join_button.click()
-except TimeoutException as E:
-    print('Failed')
 time.sleep(100)
 driver.close()
