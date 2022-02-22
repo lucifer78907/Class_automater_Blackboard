@@ -14,8 +14,7 @@ from dotenv import load_dotenv
 from os import getenv
 
 # TODO-1: complete time table
-# TODO-2: fix bugs
-# TODO-3: automate to run the script at specific time
+# TODO-2: automate to run the script at specific time
 
 load_dotenv()
 Website = f'{getenv("CLASSES_WEBSITE")}'
@@ -37,16 +36,18 @@ op.add_experimental_option("prefs", {
 })
 
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=op)
-driver.get(f"{Website}")
+driver.get(Website)
 driver.maximize_window()
 
 try:
     # webdriver waits for 5 seconds until the condition (presence of ele located is fulfilled)
     # then it moves on and find element by class name ,id , or css selectors etc
-    element = WebDriverWait(driver, 5).until(ec.element_to_be_clickable((By.CLASS_NAME, "button-1")))
+    element = WebDriverWait(driver, 10).until(ec.element_to_be_clickable((By.CLASS_NAME, "button-1")))
     agree_button = driver.find_element(by=By.CLASS_NAME, value="button-1")
     agree_button.click()
 except TimeoutException as E:
+    print("failed")
+finally:
     user_id_input = driver.find_element(by=By.ID, value="user_id")
     user_id_input.send_keys(user_id)
     password_input = driver.find_element(by=By.ID, value="password")
@@ -61,8 +62,7 @@ except TimeoutException as E:
             break
         else:
             print("No classes found")
-
-    drop_down_ele = WebDriverWait(driver, 9).until(ec.element_to_be_clickable((By.ID, "sessions-list-dropdown")))
+    drop_down_ele = WebDriverWait(driver, 20).until(ec.element_to_be_clickable((By.ID, "sessions-list-dropdown")))
     join_session_drop_down = driver.find_element(by=By.ID, value="sessions-list-dropdown")
     join_session_drop_down.click()
     try:

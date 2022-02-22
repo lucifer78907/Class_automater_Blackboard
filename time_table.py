@@ -30,5 +30,13 @@ time_table = {
         "class4": (SOFT_ENG, *class_start_times["start4"]),
         "class5": (SOFT_ENG_LAB, *class_start_times["start6"]),
         "class6": (SOFT_ENG_LAB, *class_start_times["start7"])
+    },
+    "Tuesday": {
+        "class1": (DSA_ANA, *class_start_times["start1"]),
+        "class2": (CN, *class_start_times["start2"]),
+        "class3": (MI, *class_start_times["start3"]),
+        "class4": (LS, *class_start_times["start4"]),
+        "class5": (MI_LAB, *class_start_times["start6"]),
+        "class6": (MI_LAB, *class_start_times["start7"])
     }
 }
